@@ -1,8 +1,6 @@
+const app = require('./app'); // Подключаем express-приложение из app.js
 
-const app = require('./app') // varsinainen Express-sovellus
-const config = require('./utils/config')
-const logger = require('./utils/logger')
-
-app.listen(config.PORT, () => {
-  logger.info(`Server running on port ${config.PORT}`)
-})
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

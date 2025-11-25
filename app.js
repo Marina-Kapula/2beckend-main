@@ -1,30 +1,20 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const config = require('./utils/config')
-const logger = require('./utils/logger')
-const middleware = require('./utils/middleware')
-const notesRouter = require('./controllers/notes')
+const express = require('express');
+const app = express();
+const cors = require('cors');
+app.use(cors());
+app.use(express.json());
 
-const app = express()
+// Маршрут для фронта: получаем все контакты!
+app.get('/api/persons', (req, res) => {
+  // Пример — массив
+  res.json([{ name: "Test", number: "12345" }]);
+});
 
-logger.info('connecting to', config.MONGODB_URI)
+// Можно добавить остальные (POST, DELETE, GET по :id и т.д.)
 
-mongoose
-  .connect(config.MONGODB_URI, { family: 4 })
-  .then(() => {
-    logger.info('connected to MongoDB')
-  })
-  .catch((error) => {
-    logger.error('error connection to MongoDB:', error.message)
-  })
+// Неизвестный маршрут
+app.use((req, res) => {
+  res.status(404).json({ error: 'unknown endpoint' });
+});
 
-app.use(express.static('dist'))
-app.use(express.json())
-app.use(middleware.requestLogger)
-
-app.use('/api/notes', notesRouter)
-
-app.use(middleware.unknownEndpoint)
-app.use(middleware.errorHandler)
-
-module.exports = app
+module.exports = app; // <-- ВНИМАНИЕ: экспортируем app!
