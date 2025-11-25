@@ -15,4 +15,13 @@ app.use((req, res) => {
   res.status(404).json({ error: 'unknown endpoint' });
 });
 
+
+app.post('/api/persons', (req, res) => {
+  // Для теста — просто верни то, что пришло, пусть даже без сохранения!
+  const person = req.body;
+  // Можно добавить проверку, а можно сразу вернуть
+  res.status(201).json(person);
+});
+
+
 module.exports = app;
