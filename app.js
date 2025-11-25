@@ -4,17 +4,15 @@ const cors = require('cors');
 app.use(cors());
 app.use(express.json());
 
-// Маршрут для фронта: получаем все контакты!
+// ДОБАВЬ ВОТ ЭТО!
 app.get('/api/persons', (req, res) => {
-  // Пример — массив
-  res.json([{ name: "Test", number: "12345" }]);
+  // Для теста отдай хотя бы пустой массив — чтобы фронт заработал!
+  res.json([]);
 });
 
-// Можно добавить остальные (POST, DELETE, GET по :id и т.д.)
-
-// Неизвестный маршрут
+// Обрезка неизвестных маршрутов
 app.use((req, res) => {
   res.status(404).json({ error: 'unknown endpoint' });
 });
 
-module.exports = app; // <-- ВНИМАНИЕ: экспортируем app!
+module.exports = app;
