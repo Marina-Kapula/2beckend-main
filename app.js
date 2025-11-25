@@ -25,11 +25,6 @@ app.post('/api/persons', async (req, res) => {
   res.status(201).json(savedPerson);
 });
 
-app.use((req, res) => {
-  res.status(404).json({ error: 'unknown endpoint' });
-});
-
-
 app.delete('/api/persons/:id', async (req, res) => {
   try {
     await Person.findByIdAndDelete(req.params.id);
@@ -37,6 +32,11 @@ app.delete('/api/persons/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Delete failed' });
   }
+});
+
+
+app.use((req, res) => {
+  res.status(404).json({ error: 'unknown endpoint' });
 });
 
 module.exports = app;
