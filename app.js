@@ -29,4 +29,14 @@ app.use((req, res) => {
   res.status(404).json({ error: 'unknown endpoint' });
 });
 
+
+app.delete('/api/persons/:id', async (req, res) => {
+  try {
+    await Person.findByIdAndDelete(req.params.id);
+    res.status(204).end();
+  } catch (error) {
+    res.status(500).json({ error: 'Delete failed' });
+  }
+});
+
 module.exports = app;
