@@ -19,4 +19,12 @@ app.use((req, res) => {
   res.status(404).json({ error: 'unknown endpoint' });
 });
 
+
+const mongoose = require('mongoose');
+require('dotenv').config();
+
+mongoose.connect(process.env.MONGODB_URI, { family: 4 })
+  .then(() => console.log('connected to MongoDB'))
+  .catch((error) => console.error('error connecting to MongoDB:', error.message));
+
 module.exports = app;
