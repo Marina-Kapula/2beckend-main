@@ -1,11 +1,14 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-app.use(cors());
-app.use(express.json());
+const path = require('path');
 
 const mongoose = require('mongoose');
 require('dotenv').config();
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static('dist')); // раздаём собранный frontend
 
 mongoose.connect(process.env.MONGODB_URI, { family: 4 })
   .then(() => console.log('connected to MongoDB'))
@@ -51,10 +54,9 @@ app.post('/api/persons', async (req, res, next) => {
     const savedPerson = await person.save();
     res.status(201).json(savedPerson);
   } catch (error) {
-    next(error); // сюда прилетят ValidationError и другие
+    next(error);
   }
 });
-
 
 // PUT update person
 app.put('/api/persons/:id', (req, res, next) => {
@@ -82,6 +84,16 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .catch(error => next(error));
 });
 
+// SPA fallback: все НЕ /api запросы отдать index.html
+app.get(/^(?!\/api).*/, (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
+});
+
+// Unknown endpoint (если что-то всё-таки не поймали)
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: 'unknown endpoint' });
+};
+
 // Error handler
 const errorHandler = (error, req, res, next) => {
   console.error(error.message);
@@ -93,11 +105,6 @@ const errorHandler = (error, req, res, next) => {
   }
 
   next(error);
-};
-
-// Unknown endpoint
-const unknownEndpoint = (req, res) => {
-  res.status(404).send({ error: 'unknown endpoint' });
 };
 
 app.use(unknownEndpoint);
