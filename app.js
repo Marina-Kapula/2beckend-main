@@ -43,12 +43,18 @@ app.get('/api/persons/:id', (req, res, next) => {
 });
 
 // POST new person
-app.post('/api/persons', async (req, res) => {
+app.post('/api/persons', async (req, res, next) => {
   const { name, number } = req.body;
   const person = new Person({ name, number });
-  const savedPerson = await person.save();
-  res.status(201).json(savedPerson);
+
+  try {
+    const savedPerson = await person.save();
+    res.status(201).json(savedPerson);
+  } catch (error) {
+    next(error); // сюда прилетят ValidationError и другие
+  }
 });
+
 
 // PUT update person
 app.put('/api/persons/:id', (req, res, next) => {
